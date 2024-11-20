@@ -1,0 +1,114 @@
+1. Загрузите образ busybox последней версии
+
+$ docker pull busybox
+
+Using default tag: latest
+latest: Pulling from library/busybox
+430378704d12: Download complete
+Digest: sha256:5b0f33c83a97f5f7d12698df6732098b0cdb860d377f6307b68efe2c6821296f
+Status: Downloaded newer image for busybox:latest
+docker.io/library/busybox:latest
+
+
+2. Запустите новый контейнер busybox с командой ping сайта netology.ru, и количеством пингов 7, поименуйте контейнер pinger
+
+$ docker run --name pinger -it busybox ping -c 7 netology.ru
+
+PING netology.ru (188.114.99.224): 56 data bytes
+64 bytes from 188.114.99.224: seq=0 ttl=63 time=35.420 ms
+64 bytes from 188.114.99.224: seq=1 ttl=63 time=35.674 ms
+64 bytes from 188.114.99.224: seq=2 ttl=63 time=35.594 ms
+64 bytes from 188.114.99.224: seq=3 ttl=63 time=35.890 ms
+64 bytes from 188.114.99.224: seq=4 ttl=63 time=35.732 ms
+64 bytes from 188.114.99.224: seq=5 ttl=63 time=35.821 ms
+64 bytes from 188.114.99.224: seq=6 ttl=63 time=35.571 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 35.420/35.671/35.890 ms
+
+
+3. Выведите на список всех контейнеров - запущенных и остановленных
+
+$ docker ps -a
+
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS                      PORTS     NAMES
+3f013a46cc27   busybox   "ping -c 7 netology.…"   21 seconds ago   Exited (0) 15 seconds ago             pinger
+
+
+4. Выведите на экран логи контейнера с именем pinger
+
+$ docker logs pinger
+
+PING netology.ru (188.114.99.224): 56 data bytes
+64 bytes from 188.114.99.224: seq=0 ttl=63 time=35.420 ms
+64 bytes from 188.114.99.224: seq=1 ttl=63 time=35.674 ms
+64 bytes from 188.114.99.224: seq=2 ttl=63 time=35.594 ms
+64 bytes from 188.114.99.224: seq=3 ttl=63 time=35.890 ms
+64 bytes from 188.114.99.224: seq=4 ttl=63 time=35.732 ms
+64 bytes from 188.114.99.224: seq=5 ttl=63 time=35.821 ms
+64 bytes from 188.114.99.224: seq=6 ttl=63 time=35.571 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 35.420/35.671/35.890 ms
+
+
+5. Запустите второй раз контейнера с именем pinger
+
+docker run --name pinger -it busybox ping -c 7 netology.ru
+docker: Error response from daemon: Conflict. The container name "/pinger" is already in use by container "3f013a46cc276d0dff910128d8356312c9ffc2c7008d34856a33e115e2c24d2b". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+
+
+6. Выведите на список всех контейнеров - запущенных и остановленных
+
+$ docker ps -a
+
+CONTAINER ID   IMAGE     COMMAND                  CREATED              STATUS                      PORTS     NAMES
+3f013a46cc27   busybox   "ping -c 7 netology.…"   About a minute ago   Exited (0) 57 seconds ago             pinger
+
+
+7. Выведите на экран логи контейнера с именем pinger
+
+$ docker logs pinger
+
+PING netology.ru (188.114.99.224): 56 data bytes
+64 bytes from 188.114.99.224: seq=0 ttl=63 time=35.420 ms
+64 bytes from 188.114.99.224: seq=1 ttl=63 time=35.674 ms
+64 bytes from 188.114.99.224: seq=2 ttl=63 time=35.594 ms
+64 bytes from 188.114.99.224: seq=3 ttl=63 time=35.890 ms
+64 bytes from 188.114.99.224: seq=4 ttl=63 time=35.732 ms
+64 bytes from 188.114.99.224: seq=5 ttl=63 time=35.821 ms
+64 bytes from 188.114.99.224: seq=6 ttl=63 time=35.571 ms
+
+--- netology.ru ping statistics ---
+7 packets transmitted, 7 packets received, 0% packet loss
+round-trip min/avg/max = 35.420/35.671/35.890 ms
+
+
+8. Определите по логам общее количество запусков команды ping и какое общее количество отправленых запросов
+
+$ docker logs pinger | grep PING | wc -l
+
+1
+
+$ docker logs pinger | grep transmitted
+
+7 packets transmitted, 7 packets received, 0% packet loss
+
+
+9. Удалите контейнер с именем pinger
+
+$ docker rm pinger
+
+pinger
+
+
+10. Удалите образ busybox
+
+$ docker rmi busybox:latest
+
+docker rmi busybox:latest
+Untagged: busybox:latest
+Deleted: sha256:5b0f33c83a97f5f7d12698df6732098b0cdb860d377f6307b68efe2c6821296f
